@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: obs-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    environment:
+      - API_PORT=8000
+      - API_HOST=0.0.0.0
+      - FRONTEND_URL=http://localhost:80
+    networks:
+      - obs-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend_ops
+    container_name: obs-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend_ops:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - obs-network
+    restart: unless-stopped
+
+networks:
+  obs-network:
+    driver: bridge 
