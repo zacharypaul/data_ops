@@ -32,6 +32,12 @@
         @click="activeTab = 'xgboost'">
         XGBoost
       </button>
+      <button 
+        class="px-6 py-3 font-medium text-sm transition-colors duration-200"
+        :class="activeTab === 'inventory' ? 'text-blue-400 border-b-2 border-blue-500' : 'text-gray-400 hover:text-gray-300'"
+        @click="activeTab = 'inventory'">
+        Inventory Pipeline
+      </button>
     </div>
     
     <!-- K-means Tab Content -->
@@ -514,6 +520,157 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Inventory Pipeline Management Tab Content -->
+    <div v-if="activeTab === 'inventory'">
+      <h3 class="text-xl font-bold mb-4">Inventory Pipeline Management</h3>
+      <p class="mb-6">Manage your data sources and pipelines with Snowflake, Fivetran, and Airflow integrations.</p>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Snowflake Integrations -->
+        <div class="bg-dark-900 rounded-lg border border-dark-600 p-5">
+          <div class="flex items-center mb-4">
+            <div class="bg-cyan-800 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+              <svg class="w-6 h-6 text-cyan-200" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,4L12,4c-4.4,0-8,3.6-8,8l0,0c0,4.4,3.6,8,8,8l0,0c4.4,0,8-3.6,8-8l0,0C20,7.6,16.4,4,12,4z M12,17.5 c-3,0-5.5-2.5-5.5-5.5S9,6.5,12,6.5s5.5,2.5,5.5,5.5S15,17.5,12,17.5z"></path>
+                <path d="M12,10L12,10c-1.1,0-2,0.9-2,2l0,0c0,1.1,0.9,2,2,2l0,0c1.1,0,2-0.9,2-2l0,0C14,10.9,13.1,10,12,10z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-cyan-300">Snowflake Data Sources</h4>
+          </div>
+          
+          <div class="space-y-2 max-h-96 overflow-y-auto pr-2">
+            <div v-for="(source, index) in snowflakeSources" :key="index" 
+                 class="flex items-center py-2 px-3 bg-dark-800 rounded border border-dark-700 hover:border-cyan-700 transition-colors">
+              <div class="w-4 h-4 mr-3 text-cyan-500">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-200">{{ source.name }}</div>
+                <div class="text-xs text-gray-400">Updated: {{ source.updated }}</div>
+              </div>
+              <div class="ml-auto">
+                <span class="text-xs py-1 px-2 rounded-full" 
+                      :class="source.status === 'Active' ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-yellow-900/30 text-yellow-400 border border-yellow-800'">
+                  {{ source.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fivetran Integrations -->
+        <div class="bg-dark-900 rounded-lg border border-dark-600 p-5">
+          <div class="flex items-center mb-4">
+            <div class="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+              <svg class="w-6 h-6 text-indigo-200" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,5L5,12l7,7l7-7L12,5z M12,11c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S12.6,11,12,11z"></path>
+                <path d="M3,12c0-5,4-9,9-9s9,4,9,9s-4,9-9,9S3,17,3,12z M12,5c-3.9,0-7,3.1-7,7s3.1,7,7,7s7-3.1,7-7C19,8.1,15.9,5,12,5z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-indigo-300">Fivetran Connectors</h4>
+          </div>
+          
+          <div class="space-y-2 max-h-96 overflow-y-auto pr-2">
+            <div v-for="(source, index) in fivetranSources" :key="index" 
+                 class="flex items-center py-2 px-3 bg-dark-800 rounded border border-dark-700 hover:border-indigo-700 transition-colors">
+              <div class="w-4 h-4 mr-3 text-indigo-500">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-200">{{ source.name }}</div>
+                <div class="text-xs text-gray-400">Sync: {{ source.syncFrequency }}</div>
+              </div>
+              <div class="ml-auto">
+                <span class="text-xs py-1 px-2 rounded-full" 
+                      :class="source.status === 'Active' ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-yellow-900/30 text-yellow-400 border border-yellow-800'">
+                  {{ source.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Airflow DAGs -->
+        <div class="bg-dark-900 rounded-lg border border-dark-600 p-5">
+          <div class="flex items-center mb-4">
+            <div class="bg-emerald-800 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+              <svg class="w-6 h-6 text-emerald-200" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,5C8.1,5,5,8.1,5,12c0,3.9,3.1,7,7,7s7-3.1,7-7C19,8.1,15.9,5,12,5z M12,16c-2.2,0-4-1.8-4-4c0-2.2,1.8-4,4-4 s4,1.8,4,4C16,14.2,14.2,16,12,16z"></path>
+                <path d="M12,9c-1.7,0-3,1.3-3,3s1.3,3,3,3s3-1.3,3-3S13.7,9,12,9z M13,12.4l-1.8,0v-2.2l1.8,0c0.6,0,1.1,0.5,1.1,1.1 S13.6,12.4,13,12.4z"></path>
+                <path d="M4,9H2v6h2v-2h2v2h2V9H6v2H4V9z"></path>
+                <path d="M22,9h-4v6h2v-2h2V9z M20,11h-2v-1h2V11z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-emerald-300">Airflow Workflows</h4>
+          </div>
+          
+          <div class="space-y-2 max-h-96 overflow-y-auto pr-2">
+            <div v-for="(source, index) in airflowSources" :key="index" 
+                 class="flex items-center py-2 px-3 bg-dark-800 rounded border border-dark-700 hover:border-emerald-700 transition-colors">
+              <div class="w-4 h-4 mr-3 text-emerald-500">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="font-medium text-gray-200">{{ source.name }}</div>
+                <div class="text-xs text-gray-400">Schedule: {{ source.schedule }}</div>
+              </div>
+              <div class="ml-auto">
+                <span class="text-xs py-1 px-2 rounded-full" 
+                      :class="source.status === 'Active' ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-yellow-900/30 text-yellow-400 border border-yellow-800'">
+                  {{ source.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pipeline monitoring section -->
+      <div class="mt-8 bg-dark-900 rounded-lg border border-dark-600 p-5">
+        <h4 class="text-lg font-bold mb-4">Pipeline Health Monitoring</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-dark-800 border border-dark-700 rounded p-4">
+            <div class="flex justify-between mb-2">
+              <span class="text-gray-400">Data Sources</span>
+              <span class="text-white font-medium">42/45</span>
+            </div>
+            <div class="w-full bg-dark-700 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" style="width: 93%;"></div>
+            </div>
+            <div class="mt-2 text-xs text-gray-400">93% healthy</div>
+          </div>
+          
+          <div class="bg-dark-800 border border-dark-700 rounded p-4">
+            <div class="flex justify-between mb-2">
+              <span class="text-gray-400">Fivetran Syncs</span>
+              <span class="text-white font-medium">18/20</span>
+            </div>
+            <div class="w-full bg-dark-700 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" style="width: 90%;"></div>
+            </div>
+            <div class="mt-2 text-xs text-gray-400">90% on schedule</div>
+          </div>
+          
+          <div class="bg-dark-800 border border-dark-700 rounded p-4">
+            <div class="flex justify-between mb-2">
+              <span class="text-gray-400">Airflow DAGs</span>
+              <span class="text-white font-medium">25/28</span>
+            </div>
+            <div class="w-full bg-dark-700 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" style="width: 89%;"></div>
+            </div>
+            <div class="mt-2 text-xs text-gray-400">89% success rate</div>
           </div>
         </div>
       </div>
@@ -1103,6 +1260,62 @@ export default {
           time: "Ongoing",
           output: "Monitoring dashboards and reports"
         }
+      ],
+      // Inventory Pipeline Data
+      snowflakeSources: [
+        { name: 'adf_bookingstaging', updated: '2023-11-15', status: 'Active' },
+        { name: 'adf_marketinganalytics', updated: '2023-11-14', status: 'Active' },
+        { name: 'adf_marketingbase', updated: '2023-11-14', status: 'Active' },
+        { name: 'adf_marketingreporting', updated: '2023-11-14', status: 'Active' },
+        { name: 'adf_pardotapi', updated: '2023-11-13', status: 'Active' },
+        { name: 'adf_salesreporting', updated: '2023-11-15', status: 'Active' },
+        { name: 'adf_salesreporting_i2c', updated: '2023-11-15', status: 'Active' },
+        { name: 'arr', updated: '2023-11-12', status: 'Active' },
+        { name: 'aws_RD', updated: '2023-11-10', status: 'Active' },
+        { name: 'boomi', updated: '2023-11-08', status: 'Warning' },
+        { name: 'cost_tracking', updated: '2023-11-15', status: 'Active' },
+        { name: 'cvent', updated: '2023-11-14', status: 'Active' },
+        { name: 'elementary_data', updated: '2023-11-15', status: 'Active' },
+        { name: 'sfdc_warehouse', updated: '2023-11-15', status: 'Active' },
+        { name: 'sixsense', updated: '2023-11-13', status: 'Active' }
+      ],
+      
+      fivetranSources: [
+        { name: 'facebook_ads', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'google_ads', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'google_analytics', syncFrequency: 'Daily', status: 'Active' },
+        { name: 'google_search_console', syncFrequency: 'Daily', status: 'Active' },
+        { name: 'hginsights', syncFrequency: 'Daily', status: 'Warning' },
+        { name: 'highspot', syncFrequency: 'Daily', status: 'Active' },
+        { name: 'hive9', syncFrequency: 'Daily', status: 'Active' },
+        { name: 'linkedin_ads', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'marketo', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'salesforce', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'salesloft', syncFrequency: 'Daily', status: 'Active' },
+        { name: 'segment_destination', syncFrequency: 'Hourly', status: 'Active' },
+        { name: 'cvent_fivetran', syncFrequency: 'Daily', status: 'Active' }
+      ],
+      
+      airflowSources: [
+        { name: 'dbt_core_daily', schedule: 'Daily @ 2AM', status: 'Active' },
+        { name: 'snowflake_maintenance', schedule: 'Weekly', status: 'Active' },
+        { name: 'digital_ecosystem', schedule: 'Daily @ 4AM', status: 'Active' },
+        { name: 'defer_sources', schedule: 'Hourly', status: 'Active' },
+        { name: 'pricing_analytics', schedule: 'Daily @ 6AM', status: 'Active' },
+        { name: 'rd_diskgroup_automation', schedule: 'Daily @ 3AM', status: 'Warning' },
+        { name: 'social_facebook_pages', schedule: 'Daily @ 5AM', status: 'Active' },
+        { name: 'social_instagram_business', schedule: 'Daily @ 5AM', status: 'Active' },
+        { name: 'social_linkedin_company_pages', schedule: 'Daily @ 5AM', status: 'Active' },
+        { name: 'social_media_data_meltano', schedule: 'Daily @ 5AM', status: 'Active' },
+        { name: 'social_twitter', schedule: 'Hourly', status: 'Active' },
+        { name: 'social_youtube_analytics', schedule: 'Daily @ 6AM', status: 'Active' },
+        { name: 'meltano_google_search_console', schedule: 'Daily @ 6AM', status: 'Active' },
+        { name: 'marts_development_marketing', schedule: 'Daily @ 7AM', status: 'Active' },
+        { name: 'thought_industries', schedule: 'Daily @ 8AM', status: 'Warning' },
+        { name: 'totango', schedule: 'Hourly', status: 'Active' },
+        { name: 'vidyard', schedule: 'Daily @ 5AM', status: 'Active' },
+        { name: 'workday', schedule: 'Daily @ 1AM', status: 'Active' },
+        { name: 'zuora', schedule: 'Hourly', status: 'Active' }
       ]
     };
   },

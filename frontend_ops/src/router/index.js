@@ -7,6 +7,7 @@ import BracketView from '../views/BracketView.vue'
 import Costs from '../views/Costs.vue'
 import MLOps from '../views/MLOps.vue'
 import AIOps from '../views/AIOps.vue'
+import TechStackShift from '../views/TechStackShift.vue'
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
     path: '/bracket',
     name: 'DataPlatformBracket',
     component: BracketView
+  },
+  {
+    path: '/tech-stack-shift',
+    name: 'TechStackShift',
+    component: TechStackShift
   },
   {
     path: '/costs',

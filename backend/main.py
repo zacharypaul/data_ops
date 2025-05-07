@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
-from routes import metrics, alerts, sop_generator, csv_upload
+from routes import metrics, alerts, sop_generator, csv_upload, connectors
 
 # Load environment variables
 load_dotenv()
@@ -39,6 +39,7 @@ app.include_router(metrics.router)
 app.include_router(alerts.router)
 app.include_router(sop_generator.router)
 app.include_router(csv_upload.router)
+app.include_router(connectors.router)
 
 @app.get("/")
 async def root():

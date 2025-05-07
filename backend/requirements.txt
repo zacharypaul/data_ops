@@ -4,7 +4,8 @@ uvicorn==0.21.1
 python-dotenv==1.0.0
 pydantic==1.10.7
 httpx==0.24.0
-pandas==2.0.0  # For CSV processing
+numpy==1.23.5  # Added explicit numpy version
+pandas==1.5.3  # For CSV processing
 
 # Database
 sqlalchemy==1.4.48  # Downgraded to be compatible with snowflake-sqlalchemy
